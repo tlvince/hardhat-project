@@ -1,0 +1,36 @@
+require("@nomiclabs/hardhat-waffle");
+const { utils } = require("ethers");
+
+// This is a sample Hardhat task. To learn how to create your own go to
+// https://hardhat.org/guides/create-task.html
+task("accounts", "Prints the list of accounts", async () => {
+  const accounts = await ethers.getSigners();
+
+  for (const account of accounts) {
+    console.log(account.address);
+  }
+});
+
+// You need to export an object to set up your config
+// Go to https://hardhat.org/config/ to learn more
+
+/**
+ * @type import('hardhat/config').HardhatUserConfig
+ */
+module.exports = {
+  networks: {
+    hardhat: {
+      accounts: {
+        accountsBalance: utils.parseEther("1000000").toString(),
+      },
+      gasPrice: 1000000000,
+    },
+    MoralisTest: {
+      url: 'https://speedy-nodes-nyc.moralis.io/0a7ddd074075d90d97125538/bsc/testnet',
+      accounts: [
+        '2d468616adc26a801d6283af659130ba3aebadf54c8f9836257505b0d4cb099a'
+      ]
+    }
+  },
+  solidity: "0.8.13",
+};
