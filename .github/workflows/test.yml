@@ -13,12 +13,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - run: npx hardhat compile
+
       - name: Check lint
         # XXX: required for https://github.com/crytic/slither-action/issues/4 until
         # next release
         uses: tlvince/slither-action@2c011f4fe0ba82f408bbc78d7d9fb136044a769b
         id: slither
         continue-on-error: true
+        ignore-compile: true
         with:
           slither-args: --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}
 
