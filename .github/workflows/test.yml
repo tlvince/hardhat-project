@@ -1,0 +1,26 @@
+name: Integration
+on:
+  push:
+jobs:
+  solidity:
+    name: Solidity
+    timeout-minutes: 10
+    needs: test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.4.0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check lint
+        # XXX: required for https://github.com/crytic/slither-action/issues/4 until
+        # next release
+        uses: tlvince/slither-action@2c011f4fe0ba82f408bbc78d7d9fb136044a769b
+        id: slither
+        continue-on-error: true
+        with:
+          slither-args: --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}
+
+      - run: echo '${{ steps.slither.outputs.stdout }}'
