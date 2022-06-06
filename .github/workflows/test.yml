@@ -29,7 +29,6 @@ jobs:
 
       - name: Create/update checklist as PR comment
         uses: actions/github-script@v5.1.0
-        if: github.event_name == 'pull_request'
         with:
           script: |
             const script = require('.github/scripts/comment')
