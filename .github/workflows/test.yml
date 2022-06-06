@@ -18,7 +18,7 @@ jobs:
       - name: Check lint
         # XXX: required for https://github.com/crytic/slither-action/issues/4 until
         # next release
-        uses: tlvince/slither-action@2c011f4fe0ba82f408bbc78d7d9fb136044a769b
+        uses: tlvince/slither-action@031cc490cae6e86d3364fb10efea5a580cb8c1c8
         id: slither
         continue-on-error: true
         with:
@@ -26,3 +26,13 @@ jobs:
           slither-args: --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}
 
       - run: echo '${{ steps.slither.outputs.stdout }}'
+
+      - name: Create/update checklist as PR comment
+        uses: actions/github-script@v5.1.0
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const script = require('.github/scripts/comment')
+            const header = '# Slither report'
+            const body = '${{ steps.slither.outputs.stdout }}'
+            await script({ github, context, header, body })
